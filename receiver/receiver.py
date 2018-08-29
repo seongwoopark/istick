@@ -2,7 +2,7 @@ import serial
 
 ser = serial.Serial('/dev/cu.usbmodem142411', 9600)
 joystick = {
-    'DIR': '·', 'X': b'0', 'Y': b'0', 'A': b'0', 'B': b'0', 'C': b'0', 'D': b'0'
+    'DIR': '·', 'X': 0, 'Y': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0
 }
 dir_chars = [
     '↖', '↑', '↗',
@@ -40,27 +40,31 @@ def get_y_axis_dir(y):
     return 'C'
 
 
-key = None
-value = None
-while True:
-    input_raw = ser.read_until()[:-1]
-    decoded = input_raw.decode("utf-8")
-    if decoded in joystick:
-        key = decoded
-        value = None
-    else:
-        value = input_raw
+def listen():
+    # init key, value
+    key = None
+    value = None
 
-    if key and value:
-        # raw joystick values
-        joystick[key] = value
+    # listen
+    while True:
+        input_raw = ser.read_until()[:-1]
+        decoded = input_raw.decode("utf-8")
+        if decoded in joystick:
+            key = decoded
+            value = None
+        else:
+            value = input_raw
 
-        # type case
-        joystick['X'] = int(joystick['X'])
-        joystick['Y'] = int(joystick['Y'])
+        if key and value:
+            # raw joystick values
+            joystick[key] = int(value)
 
-        # decide direction
-        x_dir = get_x_axis_dir(joystick['X'])
-        y_dir = get_y_axis_dir(joystick['Y'])
-        joystick['DIR'] = dirs.get((x_dir, y_dir), '·')
-        print(joystick)
+            # type case
+            joystick['X'] = joystick['X']
+            joystick['Y'] = joystick['Y']
+
+            # decide direction
+            x_dir = get_x_axis_dir(joystick['X'])
+            y_dir = get_y_axis_dir(joystick['Y'])
+            joystick['DIR'] = dirs.get((x_dir, y_dir), '·')
+            yield joystick
