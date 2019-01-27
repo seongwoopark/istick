@@ -1,6 +1,6 @@
 import serial
 
-ser = serial.Serial('/dev/cu.usbmodem142411', 9600)
+ser = serial.Serial('/dev/cu.usbmodem142410', 9600)
 joystick = {
     'DIR': '·', 'X': 0, 'Y': 0, 'A': 0, 'B': 0, 'C': 0, 'D': 0
 }
@@ -41,7 +41,7 @@ def get_y_axis_dir(y):
 
 
 def listen():
-    # init key, value
+    # init
     key = None
     value = None
 
