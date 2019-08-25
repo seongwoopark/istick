@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import Joystick from 'react-joystick';
 import ready from './assets/deploy-ready.gif';
-import deploy from './assets/deploy-done.gif';
+import deploy from './assets/deploy.gif';
 import './App.css'
 
 
 class App extends Component {
   constructor(props){
-    super.props();
+    super(props)
     this.state = {
-      input: []
+      input: [],
+      success: false
     }
   }
   componentDidMount() {
@@ -42,14 +43,24 @@ class App extends Component {
     this.closeSocket();
   }
 
+  buttonClick(){
+    this.setState({
+      success:true
+    })
+  }
+
   render() {
     return (
       <div className='background'>
-      <img src={ready} classNmae='effect_section'/>
-        <div className='input_text'>ISTICK DEPLOY</div>
+      <img src={this.state.success ? deploy:ready} className='effect_section'/>
         <div className='input_section'>
+        <div className='input_text'>
+          <p>ISTICK DEPLOY</p>
+          </div>
           {this.state.input}
+          <div className='arrow_show'></div>
         </div>
+        <button onClick={this.buttonClick.bind(this)}></button>
       </div>
     )
   }
