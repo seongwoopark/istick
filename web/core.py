@@ -1,3 +1,4 @@
+import json
 import time
 from sanic import Sanic
 from receiver import receiver
@@ -54,7 +55,7 @@ async def feed(request, ws):
 
         # to front-end
         if input_queue:
-            await ws.send(data)
+            await ws.send(json.dumps(data))
             print(f"Sent: {data}")
 
         # check input queue
