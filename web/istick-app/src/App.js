@@ -2,9 +2,16 @@ import React, { Component } from 'react';
 import Joystick from 'react-joystick';
 import ready from './assets/deploy-ready.gif';
 import deploy from './assets/deploy-done.gif';
+import './App.css'
 
 
 class App extends Component {
+  constructor(props){
+    super.props();
+    this.state = {
+      input: []
+    }
+  }
   componentDidMount() {
     this.setupSocket();
   }
@@ -17,7 +24,9 @@ class App extends Component {
     };
     this.socket.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      console.log(data);
+      this.setState({
+        input:data
+      })
     }
   }
 
@@ -35,10 +44,11 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-      <image src={ready} classNmae='effect_section'/>
-        <div>
-         input secgtion
+      <div className='background'>
+      <img src={ready} classNmae='effect_section'/>
+        <div className='input_text'>ISTICK DEPLOY</div>
+        <div className='input_section'>
+          {this.state.input}
         </div>
       </div>
     )

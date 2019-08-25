@@ -1,0 +1,24 @@
+@font-face{
+    font-family:'Digit';
+    src:url('./assets/font/DIGITALDREAMSKEW.ttf')format('truetype');
+}
+
+.effect_section{
+    margin:auto;
+
+}
+.input_section{
+    width: 70%;
+    height: 120px;
+    border : 15px solid lightgray;
+}
+.input_text{
+    width: 20%;
+    font-family: 'Digit';
+    color: lightgray;
+    background-color: lightgray;
+}
+.background{
+    background-color: black
+
+}
