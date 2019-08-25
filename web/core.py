@@ -10,9 +10,10 @@ queue_init_sec = 1.0
 key_interval_sec = 0.3
 
 
-# @app.websocket("/")
-@app.route("/")
-async def feed(request):
+@app.websocket("/")
+async def feed(request, ws):
+# @app.route("/")
+# async def feed(request):
     # init
     input_queue = []
     prev_input_key = '-1'
@@ -26,11 +27,11 @@ async def feed(request):
         # print(f"Received: {data}")
 
         # from receiver(arduino)
-        data = next(receiver.listen())
+        try:
+            data = next(receiver.listen())
+        except Exception:
+            pass
         epoch_now = time.time()
-        # to front-end
-        # await ws.send(data)
-        # print(f"Sent: {data}")
 
         # get input_key
         input_key = ''
@@ -45,16 +46,18 @@ async def feed(request):
         if not bool(data['D']):
             input_key += 'D'
 
+        # append input key
         if input_key and (epoch_now - prev_input_key_time > key_interval_sec or prev_input_key != input_key):
             input_queue.append(input_key)
             prev_input_key = input_key
             prev_input_key_time = epoch_now
 
-            print(f"interval: {epoch_now - prev_input_key_time}")
-            print(f"input_key: {input_key}")
-            print(f"prev_input_key: {prev_input_key}")
-            print(f"Queue: {input_queue}")
+        # to front-end
+        if input_queue:
+            await ws.send(data)
+            print(f"Sent: {data}")
 
+        # check input queue
         if prev_input_key_time != -1 and epoch_now - prev_input_key_time > queue_init_sec:
             if input_queue == combination:
                 print("Deploy!!")
