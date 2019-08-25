@@ -11,11 +11,12 @@
     width: 70%;
     height: 120px;
     border : 15px solid lightgray;
+    color:white;
 }
 .input_text{
     width: 20%;
     font-family: 'Digit';
-    color: lightgray;
+    color: black;
     background-color: lightgray;
 }
 .background{

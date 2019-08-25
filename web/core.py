@@ -55,8 +55,8 @@ async def feed(request, ws):
 
         # to front-end
         if input_queue:
-            await ws.send(json.dumps(data))
-            print(f"Sent: {data}")
+            await ws.send(json.dumps(input_queue))
+            print(f"Sent: {input_queue}")
 
         # check input queue
         if prev_input_key_time != -1 and epoch_now - prev_input_key_time > queue_init_sec:
