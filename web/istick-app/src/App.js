@@ -52,13 +52,14 @@ class App extends Component {
   render() {
     return (
       <div className='background'>
-      <img src={this.state.success ? deploy:ready} className='effect_section'/>
+      {/* <img src={this.state.success ? deploy:ready} className='effect_section'/> */}
         <div className='input_section'>
-        <div className='input_text'>
-          <p>ISTICK DEPLOY</p>
+          <div className='input_text'>
+            <p>ISTICK DEPLOY</p>
           </div>
-          {this.state.input}
-          <div className='arrow_show'></div>
+          <div className='arrow_show'>
+            {this.state.input}
+          </div>
         </div>
         <button onClick={this.buttonClick.bind(this)}></button>
       </div>

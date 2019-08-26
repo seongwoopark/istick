@@ -31,6 +31,7 @@
 .arrow_show{
     height: 100%;
     border : 15px solid lightgray;
+    color: lightgray;
 }
 
 body{
