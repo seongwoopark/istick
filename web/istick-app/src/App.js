@@ -52,7 +52,7 @@ class App extends Component {
   render() {
     return (
       <div className='background'>
-      {/* <img src={this.state.success ? deploy:ready} className='effect_section'/> */}
+      <img src={this.state.success ? deploy:ready} className='effect_section'/>
         <div className='input_section'>
           <div className='input_text'>
             <p>ISTICK DEPLOY</p>

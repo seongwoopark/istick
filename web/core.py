@@ -30,7 +30,7 @@ async def feed(request, ws):
 # async def feed(request):
     # init
     print(f"Websocket opened, {ws}")
-    data = {'input_queue': [], 'result': False}
+    data = {'input': [], 'success': False}
     prev_input_key = '-1'
     prev_input_key_time = -1
 
@@ -64,26 +64,26 @@ async def feed(request, ws):
 
         # append input key
         if input_key and (epoch_now - prev_input_key_time > key_interval_sec or prev_input_key != input_key):
-            data['input_queue'].append(input_key)
+            data['input'].append(input_key)
             prev_input_key = input_key
             prev_input_key_time = epoch_now
 
         # to front-end
-        if data['input_queue']:
+        if data['input']:
             await ws.send(json.dumps(data))
-            print(f"Sent: {data['input_queue']}")
+            print(f"Sent: {data['input']}")
 
         # check input queue
         if prev_input_key_time != -1 and epoch_now - prev_input_key_time > queue_init_sec:
-            if data['input_queue'] == combination:
+            if data['input'] == combination:
                 print("Deploy!!")
-                data['result'] = True
+                data['success'] = True
                 await ws.send(json.dumps(data))
-                print(f"Sent: {data['result']}")
+                print(f"Sent: {data['success']}")
                 # TODO: if did, send success signal to jenkins
                 break
             else:
-                data = {'input_queue': [], 'result': False}
+                data = {'input': [], 'success': False}
                 prev_input_key = '-1'
                 prev_input_key_time = -1
                 print('init')
