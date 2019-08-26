@@ -7,6 +7,17 @@ from receiver import receiver
 app = Sanic()
 
 
+def consume_garbage_data(*args, **kwargs):
+    for _ in range(200):
+        try:
+            data = next(receiver.listen())
+        except Exception:
+            continue
+
+
+app.listeners['before_server_start'].append(consume_garbage_data)
+
+
 combination = ['←', '↙', '↓', '↘', '→', 'A', 'A']
 queue_init_sec = 1.0
 key_interval_sec = 0.3
@@ -18,7 +29,8 @@ async def feed(request, ws):
 # @app.route("/")
 # async def feed(request):
     # init
-    input_queue = []
+    print(f"Websocket opened, {ws}")
+    data = {'input_queue': [], 'result': False}
     prev_input_key = '-1'
     prev_input_key_time = -1
 
@@ -32,43 +44,46 @@ async def feed(request, ws):
         # from receiver(arduino)
         await asyncio.sleep(loop_interval)
         try:
-            data = next(receiver.listen())
+            joystick_data = next(receiver.listen())
         except Exception:
             continue
         epoch_now = time.time()
 
         # get input_key
         input_key = ''
-        if data['DIR'] != '·':
-            input_key += data['DIR']
-        if not bool(data['A']):
+        if joystick_data['DIR'] != '·':
+            input_key += joystick_data['DIR']
+        if not bool(joystick_data['A']):
             input_key += 'A'
-        if not bool(data['B']):
+        if not bool(joystick_data['B']):
             input_key += 'B'
-        if not bool(data['C']):
+        if not bool(joystick_data['C']):
             input_key += 'C'
-        if not bool(data['D']):
+        if not bool(joystick_data['D']):
             input_key += 'D'
 
         # append input key
         if input_key and (epoch_now - prev_input_key_time > key_interval_sec or prev_input_key != input_key):
-            input_queue.append(input_key)
+            data['input_queue'].append(input_key)
             prev_input_key = input_key
             prev_input_key_time = epoch_now
 
         # to front-end
-        if input_queue:
-            await ws.send(json.dumps(input_queue))
-            print(f"Sent: {input_queue}")
+        if data['input_queue']:
+            await ws.send(json.dumps(data))
+            print(f"Sent: {data['input_queue']}")
 
         # check input queue
         if prev_input_key_time != -1 and epoch_now - prev_input_key_time > queue_init_sec:
-            if input_queue == combination:
+            if data['input_queue'] == combination:
                 print("Deploy!!")
-                # TODO: if did, send success signal to FE and jenkins
+                data['result'] = True
+                await ws.send(json.dumps(data))
+                print(f"Sent: {data['result']}")
+                # TODO: if did, send success signal to jenkins
                 break
             else:
-                input_queue = []
+                data = {'input_queue': [], 'result': False}
                 prev_input_key = '-1'
                 prev_input_key_time = -1
                 print('init')
