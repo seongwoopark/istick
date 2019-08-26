@@ -1,3 +1,4 @@
+import asyncio
 import json
 import time
 from sanic import Sanic
@@ -9,6 +10,7 @@ app = Sanic()
 combination = ['←', '↙', '↓', '↘', '→', 'A', 'A']
 queue_init_sec = 1.0
 key_interval_sec = 0.3
+loop_interval = 0.002
 
 
 @app.websocket("/")
@@ -28,10 +30,11 @@ async def feed(request, ws):
         # print(f"Received: {data}")
 
         # from receiver(arduino)
+        await asyncio.sleep(loop_interval)
         try:
             data = next(receiver.listen())
         except Exception:
-            pass
+            continue
         epoch_now = time.time()
 
         # get input_key
