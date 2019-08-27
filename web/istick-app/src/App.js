@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
-import Joystick from 'react-joystick';
+// import Joystick from 'react-joystick';
 import ready from './assets/deploy-ready.gif';
 import deploy from './assets/deploy.gif';
+import color_left from './assets/activated-arrow-left.png';
+import color_left_down from './assets/activated-arrow-left-down.png';
+import color_down from './assets/activated-arrow-down.png';
+import color_right_down from './assets/activated-arrow-right-down.png';
+import color_right from './assets/activated-arrow-right.png';
+import color_A from './assets/activated-button-A.png';
+import color_B from './assets/activated-button-B.png';
+
+
 import './App.css'
 
 class App extends Component {
@@ -9,11 +18,7 @@ class App extends Component {
     super(props);
     this.state = {
       input: [],
-      success: false,
-      success_set:['←', '↙','↓','↘','→','A','B'],
-      success_flag:[false,false,false,false,false,false,false],
-      success_index: 0,
-      failed: false
+      success: false
     }
   }
   componentDidMount() {
@@ -26,59 +31,26 @@ class App extends Component {
     this.socket.onopen = (event) => {
         console.log(`Socket is connected to "${url}"`)
     };
-    const inputlist = this.state.input;
     this.socket.onmessage = (event) => {
-      const data = JSON.parse(event.data)
-      const data_input = data.input
-      if(JSON.stringify(inputlist)!==JSON.stringify(data_input)){
-        this.checkNext(data_input);
-      }
+      let input_arrows = event.input;
+      let success = event.success;
+  
+      if(success){
+        this.setState({
+          success: success 
+        })
+        setTimeout(function(){
+          console.log('success')
+       }, 1500);
+     
+       }
+      else if (JSON.stringify(this.state.input) !== JSON.stringify(input_arrows)){
+      this.setState({
+        input: input_arrows,
+        success: success
+      })
     }
-  }
-
-  checkNext(data_input){
-    // let copy_input = JSON.parse(JSON.stringify(data_input.reverse()));
-    const state_input = this.state.input;
-    const state_input_length = state_input.length;
-    // let index = this.state.success_index;
-    let success_set = this.state.success_set;
-    let success_flag = this.state.success_flag;
-    let index = this.state.success_index;
-
-    // data input을 state-input 크기만큼 잘라서 새로 저장, 나머지도 ㄸㅏ로 저장
-    const slice_input = data_input.slice(0, state_input_length);
-    const slice_left = data_input.slice(state_input_length, );
-    
-    // 자른 배열이랑 state-input value 가 같고 나머지 set가 success_set 인덱스와 같으면 success flag index true
-    // check if ['a','a','a','b','b'] next can be ['a','a','a','b','b','b','c','d']
-    let new_success_set = []
-    console.log('suc-set',success_set)
-    console.log('suc-flag',success_flag)
-    console.log('index',index)
-
-    console.log('slice-input',slice_input)
-    console.log('slice_left',slice_left)
-
-    if(JSON.stringify(slice_input) === JSON.stringify(state_input)){
-      for(var i=0; i<slice_left.length; i++){
-        if(success_set[index+i] === slice.left[i]){
-          success_flag[index+i] = true;
-          index += 1;
-        }else{
-          this.setState({
-            failed: true
-          })
-          return
-        }
-      }
     }
-    // state 저장
-    this.setState({
-      input:data_input,
-      success_flag: success_flag,
-      success_index: index,
-    })
-
   }
 
   sendToSocket(message) {
@@ -93,26 +65,56 @@ class App extends Component {
     this.closeSocket();
   }
 
-  buttonClick(){
+  buttonClick(){ 
     this.setState({
-      success:true
+      success: !this.state.success
     })
   }
 
   render() {
+    const {input} = this.state.input
+    const letter = ['A','B','C','D']
+    const deploy_letter = ['-','-','D','E','P','L','O','Y','-','-']
     return (
       <div className='background'>
-      {/* <img src={this.state.success ? deploy:ready} className='effect_section'/> */}
+      <img src={this.state.success ? deploy:ready} className='effect_section'/>
         <div className='input_section'>
-          <div className='input_text'>
-            <p>ISTICK DEPLOY</p>
+          <div className='input_bar'>
+            <div className='input_text'>
+              <p>ISTICK - DEPLOY</p>
+            </div>
+            <div className='answer_section'>
+              <img src={color_left} className='arrows'/>
+              <img src={color_left_down} className='arrows'/>
+              <img src={color_down} className='arrows'/>
+              <img src={color_right_down} className='arrows'/>
+              <img src={color_right} className='arrows'/>
+              <img src={color_A} className='arrows_letter'/>
+              <img src={color_B} className='arrows_letter'/>
+
+            </div>
           </div>
-          <div className='arrow_show'>
-            {this.state.failed ? 'FAILED!!!': null}
-            {this.state.success_flag}
+          <div className='show_input'>
+            {this.state.success ? (
+              deploy_letter.map(item=>{
+                return <div className='letter-box deploy'>{item}</div>
+              })
+            ):
+            (input ? 
+              (input.map(item=>{
+                return(
+                letter.includes(item)?(
+                    <div className='letter-box letter'>{item}</div>
+                ) : 
+                (<div className='letter-box arrow'>{item}</div>)
+                )
+              })
+            ): null
+            )
+          }
           </div>
         </div>
-        <button onClick={this.buttonClick.bind(this)}></button>
+        <button onClick={this.buttonClick.bind(this)}>succss</button>
       </div>
     )
   }

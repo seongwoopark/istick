@@ -9,29 +9,35 @@
 }
 .input_section{
     width: 70%;
-    height: 150px;
+    height: 200px;
     display: flex;
     margin: auto;
     padding-top: 5%;
     flex-direction: column;
 }
 .input_text{
-    width: 20%;
-    height: 20%;
-    line-height: 3px;
+    width: 30%;
+    height: 50%;
+    margin-top: 50px;
     background-color: lightgray;
+    line-height: 3px;
 }
 
 .input_text p{
-    margin-left:15px;
+    margin-left:30px;
     font-family: 'Digit';
     color: gray;
+    font-weight: 1000;
+    letter-spacing: 2px;
 }
 
-.arrow_show{
+.show_input{
     height: 100%;
     border : 15px solid lightgray;
     color: lightgray;
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 body{
@@ -41,4 +47,52 @@ body{
     height: 100%;
     background-color: black;
 
+}
+
+.input_bar{
+    width: 100%;
+    display:flex;
+    flex-direction: row;
+}
+
+.answer_section{
+    width: 50%;
+    height: 100%;
+    margin-left: 208.6px;
+    margin-bottom: 5px;
+    padding-top: 20px;
+
+}
+
+.arrows{
+    width: 50px;
+    margin: 0px 2px;
+}
+.arrows_letter{
+    width: 58px;
+}
+
+.letter-box{
+    font-size:60px;
+    font-weight:800;
+    border-radius: 50%;
+    background-color:#6C6C6C;
+    width:70px;
+    height:70px;
+    text-align:center;
+    margin:5px 10px;
+
+}
+.letter{
+    color: #47A0F8;
+}
+
+.arrow{
+    color: #F3E470;
+}
+
+.deploy{
+    border-radius: 0;
+    background-color: black;
+    color: red;
 }
