@@ -38,7 +38,7 @@ class App extends Component {
           input: [],
           success: success 
         })
-        setTimeout(function(){
+        setTimeout(() => {
           this.setState({
             finish:true
           })
@@ -66,11 +66,11 @@ class App extends Component {
     this.closeSocket();
   }
 
-  buttonClick(){ 
-    this.setState({
-      finish: false
-    })
-  }
+  // buttonClick(){ 
+  //   this.setState({
+  //     finish: false
+  //   })
+  // }
 
   render() {
     const input = this.state.input
@@ -115,7 +115,7 @@ class App extends Component {
           }
           </div>
         </div>
-        <button onClick={this.buttonClick.bind(this)}>REFRESH</button>
+        {/* <button onClick={this.buttonClick.bind(this)}>REFRESH</button> */}
       </div>
     )
   }
