@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 // import Joystick from 'react-joystick';
 import ready from './assets/deploy-ready.gif';
 import deploy from './assets/deploy.gif';
-import color_left from './assets/activated-arrow-left.png';
-import color_left_down from './assets/activated-arrow-left-down.png';
-import color_down from './assets/activated-arrow-down.png';
-import color_right_down from './assets/activated-arrow-right-down.png';
-import color_right from './assets/activated-arrow-right.png';
-import color_A from './assets/activated-button-A.png';
-import color_B from './assets/activated-button-B.png';
-
+import deploy_finished from './assets/deploy-finished.png'
 
 import './App.css'
 
@@ -36,15 +29,20 @@ class App extends Component {
       const data = JSON.parse(event.data);
       let input_arrows = data.input;
       let success = data.success;
-  
+      const finish = this.state.finish;
+      if(finish){
+        return;
+      }
       if(success){
         this.setState({
           input: [],
           success: success 
         })
         setTimeout(function(){
-          console.log('success')
-       }, 1500);
+          this.setState({
+            finish:true
+          })
+       }, 5000);
      
        }
       else if (JSON.stringify(this.state.input) !== JSON.stringify(input_arrows)){
@@ -70,7 +68,7 @@ class App extends Component {
 
   buttonClick(){ 
     this.setState({
-      success: !this.state.success
+      finish: false
     })
   }
 
@@ -82,7 +80,7 @@ class App extends Component {
 
     return (
       <div className='background'>
-      {/* <img src={this.state.success ? deploy:ready} className='effect_section'/> */}
+      <img src={this.state.finish? deploy_finished : this.state.success ? deploy:ready} className='effect_section'/>
         <div className='input_section'>
           <div className='input_bar'>
             <div className='input_text'>
@@ -117,7 +115,7 @@ class App extends Component {
           }
           </div>
         </div>
-        <button onClick={this.buttonClick.bind(this)}>succss</button>
+        <button onClick={this.buttonClick.bind(this)}>REFRESH</button>
       </div>
     )
   }
