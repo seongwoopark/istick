@@ -4,6 +4,7 @@
 }
 
 .effect_section{
+    width: 70%;
     display:flex;
     margin:auto;
 }
@@ -16,7 +17,7 @@
     flex-direction: column;
 }
 .input_text{
-    width: 30%;
+    width: 20%;
     height: 50%;
     margin-top: 50px;
     background-color: lightgray;
@@ -56,20 +57,13 @@ body{
 }
 
 .answer_section{
-    width: 50%;
+    width: 30%;
     height: 100%;
-    margin-left: 208.6px;
+    margin-left: 50%;
     margin-bottom: 5px;
     padding-top: 20px;
-
-}
-
-.arrows{
-    width: 50px;
-    margin: 0px 2px;
-}
-.arrows_letter{
-    width: 58px;
+    display:flex;
+    flex-direction: row;
 }
 
 .letter-box{
@@ -95,4 +89,15 @@ body{
     border-radius: 0;
     background-color: black;
     color: red;
+}
+
+.answer_button{
+    font-size:40px;
+    font-weight:800;
+    border-radius: 50%;
+    background-color:#6C6C6C;
+    width:50px;
+    height:50px;
+    text-align:center;
+    margin:2px 5px;
 }

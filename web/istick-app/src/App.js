@@ -18,7 +18,8 @@ class App extends Component {
     super(props);
     this.state = {
       input: [],
-      success: false
+      success: false,
+      finish: false,
     }
   }
   componentDidMount() {
@@ -32,11 +33,13 @@ class App extends Component {
         console.log(`Socket is connected to "${url}"`)
     };
     this.socket.onmessage = (event) => {
-      let input_arrows = event.input;
-      let success = event.success;
+      const data = JSON.parse(event.data);
+      let input_arrows = data.input;
+      let success = data.success;
   
       if(success){
         this.setState({
+          input: [],
           success: success 
         })
         setTimeout(function(){
@@ -72,26 +75,26 @@ class App extends Component {
   }
 
   render() {
-    const {input} = this.state.input
+    const input = this.state.input
     const letter = ['A','B','C','D']
     const deploy_letter = ['-','-','D','E','P','L','O','Y','-','-']
+    const answer_set = ['←', '↙', '↓', '↘', '→', 'A', 'B']
+
     return (
       <div className='background'>
-      <img src={this.state.success ? deploy:ready} className='effect_section'/>
+      {/* <img src={this.state.success ? deploy:ready} className='effect_section'/> */}
         <div className='input_section'>
           <div className='input_bar'>
             <div className='input_text'>
               <p>ISTICK - DEPLOY</p>
             </div>
             <div className='answer_section'>
-              <img src={color_left} className='arrows'/>
-              <img src={color_left_down} className='arrows'/>
-              <img src={color_down} className='arrows'/>
-              <img src={color_right_down} className='arrows'/>
-              <img src={color_right} className='arrows'/>
-              <img src={color_A} className='arrows_letter'/>
-              <img src={color_B} className='arrows_letter'/>
-
+             { answer_set.map(item=>{
+                return(
+                  <div className='answer_button'>{item}</div>
+                )
+              })
+            }
             </div>
           </div>
           <div className='show_input'>
