@@ -1,2 +1,4 @@
+python-jenkins
+hvac
 sanic==0.7.0
 websockets==5.0.1

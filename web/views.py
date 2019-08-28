@@ -2,7 +2,9 @@ import asyncio
 import json
 import time
 from sanic import Sanic
+
 from receiver import receiver
+from .externs import deploy_local_swarm_service
 
 app = Sanic()
 
@@ -29,7 +31,7 @@ async def feed(request, ws):
 # @app.route("/")
 # async def feed(request):
     # init
-    print(f"Websocket opened, {ws}")
+    print(f"websocket opened, {ws}")
     data = {'input': [], 'success': False}
     prev_input_key = '-1'
     prev_input_key_time = -1
@@ -71,16 +73,17 @@ async def feed(request, ws):
         # to front-end
         if data['input']:
             await ws.send(json.dumps(data))
-            print(f"Sent: {data['input']}")
+            print(f"sent: {data['input']}")
 
         # check input queue
         if prev_input_key_time != -1 and epoch_now - prev_input_key_time > queue_init_sec:
             if data['input'] == combination:
-                print("Deploy!!")
+                print("go deploy!!")
                 data['success'] = True
                 await ws.send(json.dumps(data))
-                print(f"Sent: {data['success']}")
-                # TODO: if did, send success signal to jenkins
+                print(f"sent: {data['success']}")
+                asyncio.get_event_loop().call_soon(deploy_local_swarm_service, 'notification')
+                print("fired deploy!!!")
                 break
             else:
                 data = {'input': [], 'success': False}
