@@ -18,7 +18,7 @@ def consume_garbage_data(*args, **kwargs):
 app.listeners['before_server_start'].append(consume_garbage_data)
 
 
-combination = ['←', '↙', '↓', '↘', '→', 'A', 'A']
+combination = ['←', '↙', '↓', '↘', '→', 'A', 'B']
 queue_init_sec = 1.0
 key_interval_sec = 0.3
 loop_interval = 0.002
