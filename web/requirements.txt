@@ -1,4 +1,4 @@
 python-jenkins
 hvac
-sanic==0.7.0
+sanic==20.12.7
 websockets==5.0.1
